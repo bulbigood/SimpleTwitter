@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="app_bar_min_height">60dp</dimen>
+    <dimen name="app_bar_screen_name_margin">65dp</dimen>
+
+    <dimen name="twitter_icon_height">32dp</dimen>
+    <dimen name="tweet_image_height">180dp</dimen>
+    <dimen name="tweet_interval">16dp</dimen>
+    <dimen name="tweet_title_margin">0dp</dimen>
+
+    <dimen name="big_margin">8dp</dimen>
+    <dimen name="little_margin">4dp</dimen>
+</resources>

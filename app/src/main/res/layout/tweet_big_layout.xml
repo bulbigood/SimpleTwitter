@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/big_margin"
+>
+
+    <TextView
+            style="@style/TweetText"
+            android:text="Text"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tweet_text"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/tweet_title_margin"
+            android:autoLink="web"
+            android:linksClickable="true"
+    />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/little_margin"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:id="@+id/tweet_image_layout" android:layout_below="@+id/tweet_text">
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:id="@+id/tweet_image"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/twitter_icon_height" android:layout_below="@+id/tweet_image_layout"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:weightSum="1">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:padding="0dp"
+                    android:background="@color/white"
+                    android:layout_marginRight="@dimen/little_margin" android:layout_marginEnd="@dimen/little_margin"
+                    app:srcCompat="@drawable/favorite" android:id="@+id/favoriteButton"/>
+            <TextView
+                    style="@style/TweetSecondaryText"
+                    android:textStyle="bold"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tweet_favorite_count"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center">
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:padding="0dp"
+                    android:background="@color/white"
+                    android:layout_marginRight="@dimen/little_margin" android:layout_marginEnd="@dimen/little_margin"
+                    app:srcCompat="@drawable/retweet" android:id="@+id/retweetButton"/>
+            <TextView
+                    style="@style/TweetSecondaryText"
+                    android:textStyle="bold"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tweet_retweet_count"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
