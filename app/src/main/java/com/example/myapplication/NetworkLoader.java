@@ -62,7 +62,13 @@ public class NetworkLoader {
 
     public boolean loadTweet(Long id){
         if(token == null) return false;
-        AppInitializer.getApi().getTweet(id, token.getRequestToken()).enqueue(new CallbackTweet());
+        AppInitializer.getApi().getTweet(id, null, token.getRequestToken()).enqueue(new CallbackLoadTweet());
+        return true;
+    }
+
+    public boolean loadExtendedTweet(Long id){
+        if(token == null) return false;
+        AppInitializer.getApi().getTweet(id, "extended", token.getRequestToken()).enqueue(new CallbackExtendedTweet());
         return true;
     }
 
@@ -208,7 +214,7 @@ public class NetworkLoader {
         }
     }
 
-    private class CallbackTweet implements Callback<Tweet> {
+    private class CallbackLoadTweet implements Callback<Tweet> {
 
         @Override
         public void onResponse(Call<Tweet> call, Response<Tweet> response) {
@@ -219,6 +225,24 @@ public class NetworkLoader {
                 ArrayList<Tweet> list = new ArrayList<>();
                 list.add(body);
                 PageController.getInstance(activity).addLastTweets(list);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Tweet> call, Throwable throwable) {
+            Log.e("API_CONNECTION_ERROR", throwable.getMessage());
+        }
+    }
+
+    private class CallbackExtendedTweet implements Callback<Tweet> {
+
+        @Override
+        public void onResponse(Call<Tweet> call, Response<Tweet> response) {
+            Tweet body = response.body();
+            if(body == null)
+                Log.e("API_ERROR", response.message());
+            else {
+                PageController.getInstance(activity).createTweetPage(body);
             }
         }
 

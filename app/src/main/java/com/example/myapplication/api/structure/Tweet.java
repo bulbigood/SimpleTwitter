@@ -20,6 +20,9 @@ public class Tweet {
     @SerializedName("text")
     @Expose
     private String text;
+    @SerializedName("full_text")
+    @Expose
+    private String full_text;
     @SerializedName("truncated")
     @Expose
     private Boolean truncated;
@@ -95,6 +98,10 @@ public class Tweet {
 
     public String getText() {
         return text;
+    }
+
+    public String getFullText() {
+        return full_text;
     }
 
     public Boolean getTruncated() {

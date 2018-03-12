@@ -1,14 +1,10 @@
 package com.example.myapplication.page;
 
-import android.util.Log;
 import com.example.myapplication.NetworkLoader;
 import com.example.myapplication.ui.ScrollingActivity;
 import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;
-import com.example.myapplication.ui.TweetsListAdapter;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
@@ -35,27 +31,27 @@ public class PageController {
 
     public void loadUserPage(String user){
         NetworkLoader.getInstance(activity).loadUserHeader(user);
-        activity.showUserPage();
     }
 
     public void loadTweetPage(Tweet tweet){
+        NetworkLoader.getInstance(activity).loadExtendedTweet(tweet.getId());
         NetworkLoader.getInstance(activity).loadReplies(tweet);
-        createTweetPage(tweet);
-        activity.showTweetPage(tweet);
     }
 
     public void createUserPage(User user){
         UserPage page = new UserPage(user);
         pages.push(page);
         currentPage = page;
-        activity.setUserPageHeader(user);
+        activity.setPageHeader(user);
+        activity.showUserPage();
     }
 
     public void createTweetPage(Tweet tweet){
         TweetRepliesPage page = new TweetRepliesPage(tweet);
         pages.push(page);
         currentPage = page;
-        activity.setTweetPageHeader(tweet.getUser());
+        activity.setPageHeader(tweet.getUser());
+        activity.showTweetPage(tweet);
     }
 
     public void addFirstTweets(List<Tweet> tweets){
@@ -82,11 +78,11 @@ public class PageController {
 
         if(currentPage instanceof UserPage){
             activity.showUserPage();
-            activity.setUserPageHeader(currentPage.getUser());
+            activity.setPageHeader(currentPage.getUser());
         } else {
             TweetRepliesPage tweet_page = (TweetRepliesPage) currentPage;
             activity.showTweetPage(tweet_page.getHeaderTweet());
-            activity.setUserPageHeader(tweet_page.getUser());
+            activity.setPageHeader(tweet_page.getUser());
         }
 
 

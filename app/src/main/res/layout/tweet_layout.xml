@@ -27,15 +27,6 @@
             android:id="@+id/tweet_date" android:layout_alignParentTop="true" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
     <TextView
-            style="@style/TweetSecondaryText"
-            android:text="ScreenName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tweet_screen_name"
-            android:layout_marginLeft="@dimen/big_margin"
-            android:layout_marginStart="@dimen/big_margin" android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/tweet_name" android:layout_toEndOf="@+id/tweet_name"/>
-    <TextView
             style="@style/TweetPrimaryText"
             android:text="Name"
             android:layout_width="wrap_content"

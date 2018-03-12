@@ -69,6 +69,9 @@ public class RepliesListAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
+        ImageButton replyButton = view.findViewById(R.id.replyButton);
+        replyButton.setOnClickListener(new ReplyButtonListener(PageController.getInstance(activity), tweet));
+
         return view;
     }
 }

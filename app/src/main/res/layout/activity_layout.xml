@@ -57,6 +57,7 @@
                         android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
                         android:id="@+id/user_screen_name"
 
                         android:paddingLeft="@dimen/little_margin"
@@ -69,6 +70,7 @@
                         android:text="Обновлено только что"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
                         android:id="@+id/user_date"
                         android:paddingRight="@dimen/little_margin"
                         android:layout_gravity="right|top"

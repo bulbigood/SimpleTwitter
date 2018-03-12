@@ -37,6 +37,8 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     private int lastVisiblePosition = 0;
     private int positionsCount = 0;
 
+    private static boolean initialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
 
         NetworkLoader.getInstance(this).loadBearerToken();
         PageController.getInstance(this);
+        initialized = true;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         favor.setText(favor_count);
         retweet.setText(retweets_count);
 
-        text.setText(tweet.getText());
+        text.setText(tweet.getFullText());
         Utils.loadImages(big_tweet, tweet);
 
         Page page = PageController.getInstance(this).currentPage();
@@ -136,7 +139,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         return adapter;
     }
 
-    public void setUserPageHeader(User user){
+    public void setPageHeader(User user){
         final User final_user = user;
         CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
 
@@ -175,22 +178,6 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         String banner_url = user.getProfileBannerUrl();
         icon_url = icon_url.replace("_normal.png", ".png");
         Glide.with(this).load(banner_url).into(banner);
-        Glide.with(this).load(icon_url).into(icon);
-    }
-
-    public void setTweetPageHeader(User user){
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        AppBarLayout layout = findViewById(R.id.app_bar);
-        layout.setExpanded(false);
-
-        TextView screen_name = findViewById(R.id.user_screen_name);
-        ImageView icon = findViewById(R.id.user_icon_image);
-
-        toolbar.setTitle(user.getName());
-        screen_name.setText("@" + user.getScreenName());
-
-        String icon_url = user.getProfileImageUrl();
-        icon_url = icon_url.replace("_normal.png", ".png");
         Glide.with(this).load(icon_url).into(icon);
     }
 

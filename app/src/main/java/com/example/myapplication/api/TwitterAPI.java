@@ -11,7 +11,7 @@ import retrofit2.http.*;
 public interface TwitterAPI {
 
     @GET("/1.1/statuses/show.json")
-    Call<Tweet> getTweet(@Query("id") Long id,
+    Call<Tweet> getTweet(@Query("id") Long id, @Query("tweet_mode") String tweet_mode,
                                 @Header("Authorization") String credentials);
 
     @GET("/1.1/search/tweets.json")

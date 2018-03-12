@@ -35,12 +35,12 @@ public class TweetsListAdapter extends ArrayAdapter<Tweet> {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(resource, null);
 
-        TextView screen_name = view.findViewById(R.id.tweet_screen_name);
+        //TextView screen_name = view.findViewById(R.id.tweet_screen_name);
         TextView name = view.findViewById(R.id.tweet_name);
         TextView date = view.findViewById(R.id.tweet_date);
         TextView text = view.findViewById(R.id.tweet_text);
 
-        String screen_name_text = "@" + tweet.getUser().getScreenName();
+        //String screen_name_text = "@" + tweet.getUser().getScreenName();
 
         //Фавориты, ретвиты...
         String favor_count = String.valueOf(tweet.getFavoriteCount());
@@ -50,7 +50,7 @@ public class TweetsListAdapter extends ArrayAdapter<Tweet> {
         favor.setText(favor_count);
         retweet.setText(retweets_count);
 
-        screen_name.setText(screen_name_text);
+        //screen_name.setText(screen_name_text);
         name.setText(tweet.getUser().getName());
         text.setText(tweet.getText());
         date.setText(Utils.getRelativeTime(tweet.getCreatedAt()));
