@@ -21,12 +21,17 @@ import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;
 import com.example.myapplication.page.Page;
 import com.example.myapplication.page.PageController;
+import com.example.myapplication.page.TweetRepliesPage;
+import com.example.myapplication.page.UserPage;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity implements NestedScrollView.OnScrollChangeListener{
+
+    private static boolean initialized = false;
+    private static ScrollingActivity activity = null;
 
     private ArrayAdapter adapter = null;
     private ExpandableHeightListView listView = null;
@@ -37,7 +42,9 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     private int lastVisiblePosition = 0;
     private int positionsCount = 0;
 
-    private static boolean initialized = false;
+    public static ScrollingActivity getInstance(){
+        return activity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +56,31 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         screen_size = new Point();
         display.getSize(screen_size);
 
-        NetworkLoader.getInstance(this).loadBearerToken();
-        PageController.getInstance(this);
+        if(!initialized) {
+            NetworkLoader.getInstance().loadBearerToken();
+            PageController.getInstance();
+        } else {
+            reloadInterface();
+        }
+        activity = this;
         initialized = true;
+    }
+
+    public void reloadInterface(){
+        Page page = PageController.getInstance().currentPage();
+
+        if(page instanceof UserPage) {
+            setPageHeader(page.getUser());
+            showUserPage();
+        } else {
+            setPageHeader(page.getUser());
+            showTweetPage(((TweetRepliesPage) page).getHeaderTweet());
+        }
     }
 
     @Override
     public void onBackPressed() {
-        PageController controller = PageController.getInstance(this);
+        PageController controller = PageController.getInstance();
         if(controller.getPagesCount() <= 1)
             super.onBackPressed();
         else
@@ -81,14 +105,14 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
 
     public void showUserPage(){
         NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
-        scrollView.setOnTouchListener(TouchListener.getInstance(this));
+        scrollView.setOnTouchListener(TouchListener.getInstance());
 
         scrollView.getHitRect(scrollBounds);
         scrollView.setOnScrollChangeListener(this);
 
-        Page page = PageController.getInstance(this).currentPage();
+        Page page = PageController.getInstance().currentPage();
         List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
-        adapter = new TweetsListAdapter(this, R.layout.tweet_layout, tweet_list);
+        adapter = new TweetsListAdapter(R.layout.tweet_layout, tweet_list);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         listView = (ExpandableHeightListView) inflater.inflate(R.layout.custom_list_view, null);
@@ -121,9 +145,9 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         text.setText(tweet.getFullText());
         Utils.loadImages(big_tweet, tweet);
 
-        Page page = PageController.getInstance(this).currentPage();
+        Page page = PageController.getInstance().currentPage();
         List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
-        adapter = new RepliesListAdapter(this, R.layout.tweet_icon_layout, tweet_list);
+        adapter = new RepliesListAdapter(R.layout.tweet_icon_layout, tweet_list);
 
         listView = (ExpandableHeightListView) inflater.inflate(R.layout.custom_list_view, null);
         listView.setAdapter(adapter);

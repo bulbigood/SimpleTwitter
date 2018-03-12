@@ -13,63 +13,59 @@ public class PageController {
 
     private static PageController pageController = null;
 
-    private ScrollingActivity activity;
-
     private Stack<Page> pages = new Stack<>();
     private Page currentPage = null;
 
-    private PageController(ScrollingActivity activity){
-        this.activity = activity;
-    }
+    private PageController(){ }
 
-    public static PageController getInstance(ScrollingActivity activity){
+    public static PageController getInstance(){
         if(pageController == null)
-            pageController = new PageController(activity);
+            pageController = new PageController();
 
         return pageController;
     }
 
     public void loadUserPage(String user){
-        NetworkLoader.getInstance(activity).loadUserHeader(user);
+        NetworkLoader.getInstance().loadUserHeader(user);
     }
 
     public void loadTweetPage(Tweet tweet){
-        NetworkLoader.getInstance(activity).loadExtendedTweet(tweet.getId());
-        NetworkLoader.getInstance(activity).loadReplies(tweet);
+        NetworkLoader.getInstance().loadExtendedTweet(tweet.getId());
+        NetworkLoader.getInstance().loadReplies(tweet);
     }
 
     public void createUserPage(User user){
         UserPage page = new UserPage(user);
         pages.push(page);
         currentPage = page;
-        activity.setPageHeader(user);
-        activity.showUserPage();
+        ScrollingActivity.getInstance().setPageHeader(user);
+        ScrollingActivity.getInstance().showUserPage();
     }
 
     public void createTweetPage(Tweet tweet){
         TweetRepliesPage page = new TweetRepliesPage(tweet);
         pages.push(page);
         currentPage = page;
-        activity.setPageHeader(tweet.getUser());
-        activity.showTweetPage(tweet);
+        ScrollingActivity.getInstance().setPageHeader(tweet.getUser());
+        ScrollingActivity.getInstance().showTweetPage(tweet);
     }
 
     public void addFirstTweets(List<Tweet> tweets){
         currentPage.addNewTweets(tweets);
         for(int i = tweets.size() - 1; i >= 0; i-- ) {
-            activity.getAdapter().insert(tweets.get(i), 0);
+            ScrollingActivity.getInstance().getAdapter().insert(tweets.get(i), 0);
         }
     }
 
     public void addLastTweets(List<Tweet> tweets){
         currentPage.addOldTweets(tweets);
-        activity.getAdapter().addAll(tweets);
+        ScrollingActivity.getInstance().getAdapter().addAll(tweets);
     }
 
     public void replaceTweets(List<Tweet> tweets){
         currentPage.replaceTweets(tweets);
-        activity.getAdapter().clear();
-        activity.getAdapter().addAll(tweets);
+        ScrollingActivity.getInstance().getAdapter().clear();
+        ScrollingActivity.getInstance().getAdapter().addAll(tweets);
     }
 
     public Page popPage(){
@@ -77,12 +73,12 @@ public class PageController {
         currentPage = pages.size() == 0 ? null : pages.peek();
 
         if(currentPage instanceof UserPage){
-            activity.showUserPage();
-            activity.setPageHeader(currentPage.getUser());
+            ScrollingActivity.getInstance().showUserPage();
+            ScrollingActivity.getInstance().setPageHeader(currentPage.getUser());
         } else {
             TweetRepliesPage tweet_page = (TweetRepliesPage) currentPage;
-            activity.showTweetPage(tweet_page.getHeaderTweet());
-            activity.setPageHeader(tweet_page.getUser());
+            ScrollingActivity.getInstance().showTweetPage(tweet_page.getHeaderTweet());
+            ScrollingActivity.getInstance().setPageHeader(tweet_page.getUser());
         }
 
 

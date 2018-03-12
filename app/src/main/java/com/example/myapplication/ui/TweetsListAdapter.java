@@ -16,14 +16,12 @@ import java.util.List;
 
 public class TweetsListAdapter extends ArrayAdapter<Tweet> {
 
-    private ScrollingActivity activity;
     private List<Tweet> tweets;
     private int resource;
 
     //constructor, call on creation
-    public TweetsListAdapter(ScrollingActivity activity, int resource, List<Tweet> objects) {
-        super(activity, resource, objects);
-        this.activity = activity;
+    public TweetsListAdapter(int resource, List<Tweet> objects) {
+        super(ScrollingActivity.getInstance(), resource, objects);
         this.tweets = objects;
         this.resource = resource;
     }
@@ -32,7 +30,7 @@ public class TweetsListAdapter extends ArrayAdapter<Tweet> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         Tweet tweet = tweets.get(position);
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) ScrollingActivity.getInstance().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(resource, null);
 
         //TextView screen_name = view.findViewById(R.id.tweet_screen_name);
@@ -58,7 +56,7 @@ public class TweetsListAdapter extends ArrayAdapter<Tweet> {
         Utils.loadImages(view, tweet);
 
         ImageButton replyButton = view.findViewById(R.id.replyButton);
-        replyButton.setOnClickListener(new ReplyButtonListener(PageController.getInstance(activity), tweet));
+        replyButton.setOnClickListener(new ReplyButtonListener(PageController.getInstance(), tweet));
 
         return view;
     }

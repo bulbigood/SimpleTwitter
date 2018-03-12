@@ -19,14 +19,12 @@ import java.util.List;
 
 public class RepliesListAdapter extends ArrayAdapter<Tweet> {
 
-    private ScrollingActivity activity;
     private List<Tweet> tweets;
     private int resource;
 
     //constructor, call on creation
-    public RepliesListAdapter(ScrollingActivity activity, int resource, List<Tweet> objects) {
-        super(activity, resource, objects);
-        this.activity = activity;
+    public RepliesListAdapter(int resource, List<Tweet> objects) {
+        super(ScrollingActivity.getInstance(), resource, objects);
         this.tweets = objects;
         this.resource = resource;
     }
@@ -35,7 +33,7 @@ public class RepliesListAdapter extends ArrayAdapter<Tweet> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final Tweet tweet = tweets.get(position);
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) ScrollingActivity.getInstance().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(resource, null);
 
         ImageButton icon = view.findViewById(R.id.tweet_icon_button);
@@ -65,12 +63,12 @@ public class RepliesListAdapter extends ArrayAdapter<Tweet> {
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PageController.getInstance(activity).loadUserPage(tweet.getUser().getScreenName());
+                PageController.getInstance().loadUserPage(tweet.getUser().getScreenName());
             }
         });
 
         ImageButton replyButton = view.findViewById(R.id.replyButton);
-        replyButton.setOnClickListener(new ReplyButtonListener(PageController.getInstance(activity), tweet));
+        replyButton.setOnClickListener(new ReplyButtonListener(PageController.getInstance(), tweet));
 
         return view;
     }

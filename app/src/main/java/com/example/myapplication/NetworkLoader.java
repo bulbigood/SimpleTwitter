@@ -33,16 +33,13 @@ public class NetworkLoader {
 
     private static NetworkLoader networkLoader = null;
 
-    private ScrollingActivity activity;
     private BearerToken token = null;
 
-    private NetworkLoader(ScrollingActivity activity){
-        this.activity = activity;
-    }
+    private NetworkLoader(){ }
 
-    public static NetworkLoader getInstance(ScrollingActivity activity){
+    public static NetworkLoader getInstance(){
         if(networkLoader == null)
-            networkLoader = new NetworkLoader(activity);
+            networkLoader = new NetworkLoader();
         return networkLoader;
     }
 
@@ -75,7 +72,7 @@ public class NetworkLoader {
     public boolean loadTweets(String screen_name, TweetsLoadType loadType){
         if(token == null) return false;
 
-        PageController controller = PageController.getInstance(activity);
+        PageController controller = PageController.getInstance();
 
         if(screen_name == null)
             screen_name = controller.currentPage().getUser().getScreenName();
@@ -88,12 +85,12 @@ public class NetworkLoader {
             case UPDATE_NEW:
                 AppInitializer.getApi().getTimeline(screen_name, REFRESH_TWEETS_COUNT,
                         controller.currentPage().newestID(), null, token.getRequestToken()).enqueue(new CallbackTweets(loadType));
-                activity.findViewById(R.id.progressBarTop).setVisibility(View.VISIBLE);
+                ScrollingActivity.getInstance().findViewById(R.id.progressBarTop).setVisibility(View.VISIBLE);
                 break;
             case UPDATE_OLD:
                 AppInitializer.getApi().getTimeline(screen_name, REFRESH_TWEETS_COUNT,
                         null, controller.currentPage().oldestID() - 1, token.getRequestToken()).enqueue(new CallbackTweets(loadType));
-                activity.findViewById(R.id.progressBarBottom).setVisibility(View.VISIBLE);
+                ScrollingActivity.getInstance().findViewById(R.id.progressBarBottom).setVisibility(View.VISIBLE);
                 break;
         }
         return true;
@@ -112,7 +109,7 @@ public class NetworkLoader {
 
         @Override
         public void onResponse(Call<BearerToken> call, Response<BearerToken> response) {
-            PageController controller = PageController.getInstance(activity);
+            PageController controller = PageController.getInstance();
             token = response.body();
             if(token == null)
                 Log.e("API_ERROR", response.message());
@@ -135,7 +132,7 @@ public class NetworkLoader {
             if(body == null)
                 Log.e("API_ERROR", response.message());
             else {
-                PageController.getInstance(activity).createUserPage(body);
+                PageController.getInstance().createUserPage(body);
                 loadTweets(body.getScreenName(), NetworkLoader.TweetsLoadType.NEW_USER_PAGE);
             }
         }
@@ -160,7 +157,7 @@ public class NetworkLoader {
             if(body == null)
                 Log.e("API_ERROR", response.message());
             else {
-                PageController controller = PageController.getInstance(activity);
+                PageController controller = PageController.getInstance();
                 switch(loadType){
                     case NEW_USER_PAGE:
                         controller.addFirstTweets(body);
@@ -170,11 +167,11 @@ public class NetworkLoader {
                             controller.replaceTweets(body);
                         else
                             controller.addFirstTweets(body);
-                        activity.findViewById(R.id.progressBarTop).setVisibility(View.GONE);
+                        ScrollingActivity.getInstance().findViewById(R.id.progressBarTop).setVisibility(View.GONE);
                         break;
                     case UPDATE_OLD:
                         controller.addLastTweets(body);
-                        activity.findViewById(R.id.progressBarBottom).setVisibility(View.GONE);
+                        ScrollingActivity.getInstance().findViewById(R.id.progressBarBottom).setVisibility(View.GONE);
                         break;
                 }
             }
@@ -195,7 +192,7 @@ public class NetworkLoader {
                 Log.e("API_ERROR", response.message());
             else {
                 for(Status status : body.getStatuses()){
-                    PageController controller = PageController.getInstance(activity);
+                    PageController controller = PageController.getInstance();
                     TweetRepliesPage page = (TweetRepliesPage) controller.currentPage();
                     if(page != null) {
                         //loadTweet(status.getId());
@@ -224,7 +221,7 @@ public class NetworkLoader {
             else {
                 ArrayList<Tweet> list = new ArrayList<>();
                 list.add(body);
-                PageController.getInstance(activity).addLastTweets(list);
+                PageController.getInstance().addLastTweets(list);
             }
         }
 
@@ -242,7 +239,7 @@ public class NetworkLoader {
             if(body == null)
                 Log.e("API_ERROR", response.message());
             else {
-                PageController.getInstance(activity).createTweetPage(body);
+                PageController.getInstance().createTweetPage(body);
             }
         }
 
