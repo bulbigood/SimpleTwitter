@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Stack;
 
 public class PageController {
+
+    public enum PageType{ USER_PAGE, TWEET_PAGE }
+
     public final static String HOME_PAGE = "kremlinrussia";
 
     private static PageController pageController = null;
@@ -31,7 +34,7 @@ public class PageController {
 
     public void loadTweetPage(Tweet tweet){
         NetworkLoader.getInstance().loadExtendedTweet(tweet.getId());
-        NetworkLoader.getInstance().loadReplies(tweet);
+        NetworkLoader.getInstance().loadReplies(tweet, NetworkLoader.TweetsLoadType.NEW_PAGE);
     }
 
     public void createUserPage(User user){
@@ -43,7 +46,7 @@ public class PageController {
     }
 
     public void createTweetPage(Tweet tweet){
-        TweetRepliesPage page = new TweetRepliesPage(tweet);
+        TweetPage page = new TweetPage(tweet);
         pages.push(page);
         currentPage = page;
         ScrollingActivity.getInstance().setPageHeader(tweet.getUser());
@@ -76,7 +79,7 @@ public class PageController {
             ScrollingActivity.getInstance().showUserPage();
             ScrollingActivity.getInstance().setPageHeader(currentPage.getUser());
         } else {
-            TweetRepliesPage tweet_page = (TweetRepliesPage) currentPage;
+            TweetPage tweet_page = (TweetPage) currentPage;
             ScrollingActivity.getInstance().showTweetPage(tweet_page.getHeaderTweet());
             ScrollingActivity.getInstance().setPageHeader(tweet_page.getUser());
         }
@@ -89,7 +92,14 @@ public class PageController {
         return pages.size();
     }
 
-    public Page currentPage(){
+    public Page getCurrentPage(){
         return currentPage;
+    }
+
+    public PageType getCurrentPageType(){
+        if (currentPage instanceof UserPage)
+            return PageType.USER_PAGE;
+        else
+            return PageType.TWEET_PAGE;
     }
 }

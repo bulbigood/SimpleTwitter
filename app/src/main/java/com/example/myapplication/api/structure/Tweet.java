@@ -1,12 +1,13 @@
 package com.example.myapplication.api.structure;
 
+import com.example.myapplication.Utils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Никита on 05.03.2018.
  */
-public class Tweet {
+public class Tweet implements Comparable<Tweet> {
 
     @SerializedName("created_at")
     @Expose
@@ -181,4 +182,10 @@ public class Tweet {
     }
 
     public Entities getEntities() { return entities; }
+
+    @Override
+    public int compareTo(Tweet o) {
+        Long o_time = Utils.getAbsoluteTime(o.createdAt);
+        return Utils.getAbsoluteTime(createdAt).compareTo(o_time);
+    }
 }

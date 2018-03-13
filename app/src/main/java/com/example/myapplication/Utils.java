@@ -46,6 +46,10 @@ public class Utils {
     }
 
     public static String getRelativeTime(String formated_date){
+        return DateUtils.getRelativeTimeSpanString(getAbsoluteTime(formated_date)).toString();
+    }
+
+    public static Long getAbsoluteTime(String formated_date){
         long millis_time = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss Z y", Locale.US);
         try {
@@ -54,6 +58,6 @@ public class Utils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return DateUtils.getRelativeTimeSpanString(millis_time).toString();
+        return millis_time;
     }
 }

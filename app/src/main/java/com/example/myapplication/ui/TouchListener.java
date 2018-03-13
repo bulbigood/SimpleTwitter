@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import com.example.myapplication.NetworkLoader;
+import com.example.myapplication.page.PageController;
 
 public class TouchListener implements OnTouchListener {
 
@@ -44,13 +45,29 @@ public class TouchListener implements OnTouchListener {
                     int count = ScrollingActivity.getInstance().getPositionsCount();
 
                     if(first_position == 0 && vector.y > THRESHOLD_VECTOR){
-                        NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
+                        loadNew();
                     } else if(last_position == count - 1 && vector.y < -THRESHOLD_VECTOR){
-                        NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_OLD);
+                        loadOld();
                     }
                 }
                 break;
         }
         return false;
+    }
+
+    private void loadNew(){
+        if(PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE){
+            NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
+        } else {
+            NetworkLoader.getInstance().loadReplies(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
+        }
+    }
+
+    private void loadOld(){
+        if(PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE){
+            NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_OLD);
+        } else {
+            NetworkLoader.getInstance().loadReplies(null, NetworkLoader.TweetsLoadType.UPDATE_OLD);
+        }
     }
 }

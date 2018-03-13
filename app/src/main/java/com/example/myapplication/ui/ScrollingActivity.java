@@ -1,16 +1,13 @@
 package com.example.myapplication.ui;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.graphics.*;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
@@ -21,7 +18,7 @@ import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;
 import com.example.myapplication.page.Page;
 import com.example.myapplication.page.PageController;
-import com.example.myapplication.page.TweetRepliesPage;
+import com.example.myapplication.page.TweetPage;
 import com.example.myapplication.page.UserPage;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
@@ -67,14 +64,14 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     }
 
     public void reloadInterface(){
-        Page page = PageController.getInstance().currentPage();
+        Page page = PageController.getInstance().getCurrentPage();
 
         if(page instanceof UserPage) {
             setPageHeader(page.getUser());
             showUserPage();
         } else {
             setPageHeader(page.getUser());
-            showTweetPage(((TweetRepliesPage) page).getHeaderTweet());
+            showTweetPage(((TweetPage) page).getHeaderTweet());
         }
     }
 
@@ -106,11 +103,10 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     public void showUserPage(){
         NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
         scrollView.setOnTouchListener(TouchListener.getInstance());
-
         scrollView.getHitRect(scrollBounds);
         scrollView.setOnScrollChangeListener(this);
 
-        Page page = PageController.getInstance().currentPage();
+        Page page = PageController.getInstance().getCurrentPage();
         List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
         adapter = new TweetsListAdapter(R.layout.tweet_layout, tweet_list);
 
@@ -127,7 +123,9 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     public void showTweetPage(Tweet tweet){
         //Отключаю слушатель нажатий
         NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
-        scrollView.setOnTouchListener(null);
+        scrollView.setOnTouchListener(TouchListener.getInstance());
+        scrollView.getHitRect(scrollBounds);
+        scrollView.setOnScrollChangeListener(this);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
@@ -145,7 +143,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         text.setText(tweet.getFullText());
         Utils.loadImages(big_tweet, tweet);
 
-        Page page = PageController.getInstance().currentPage();
+        Page page = PageController.getInstance().getCurrentPage();
         List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
         adapter = new RepliesListAdapter(R.layout.tweet_icon_layout, tweet_list);
 
@@ -200,7 +198,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         //Загрузка изображений
         String icon_url = user.getProfileImageUrl();
         String banner_url = user.getProfileBannerUrl();
-        icon_url = icon_url.replace("_normal.png", ".png");
+        icon_url = icon_url.replace("_normal.", ".");
         Glide.with(this).load(banner_url).into(banner);
         Glide.with(this).load(icon_url).into(icon);
     }
