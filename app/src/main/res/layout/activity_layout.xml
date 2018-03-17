@@ -50,6 +50,7 @@
                 <ImageView
                         android:layout_width="@dimen/app_bar_min_height"
                         android:layout_height="@dimen/app_bar_min_height"
+                        android:scaleType="centerCrop"
                         android:src="@mipmap/kremlin_icon"
                         android:id="@+id/user_icon_image">
                 </ImageView>
@@ -61,7 +62,6 @@
                         android:id="@+id/user_screen_name"
 
                         android:paddingLeft="@dimen/little_margin"
-                        android:paddingStart="@dimen/little_margin"
                         android:layout_gravity="right"
                         app:layout_collapseMode="pin"
                         app:layout_anchor="@id/user_icon_image"
@@ -84,12 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/nestedScrollView">
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/contentLayout">
-            </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/contentLayout">
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <ProgressBar
             style="?android:attr/progressBarStyle"
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/progressBarTop"
             android:layout_gravity="bottom"
-            app:layout_anchor="@id/nestedScrollView" app:layout_anchorGravity="top" />
+            app:layout_anchor="@id/nestedScrollView" app:layout_anchorGravity="top"/>
     <ProgressBar
             style="?android:attr/progressBarStyle"
             android:visibility="gone"

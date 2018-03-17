@@ -17,12 +17,12 @@ public class TouchListener implements OnTouchListener {
     private PointF start = new PointF();
     private long oldTime = 0;
 
-    private TouchListener(){
+    private TouchListener() {
         THRESHOLD_VECTOR = ScrollingActivity.getInstance().getScreenSize().y / 4;
     }
 
-    public static TouchListener getInstance(){
-        if(touchListener == null)
+    public static TouchListener getInstance() {
+        if (touchListener == null)
             touchListener = new TouchListener();
         return touchListener;
     }
@@ -39,14 +39,14 @@ public class TouchListener implements OnTouchListener {
                 PointF finish = new PointF(event.getX(), event.getY());
                 PointF vector = new PointF(finish.x - start.x, finish.y - start.y);
                 long dtime = System.currentTimeMillis() - oldTime;
-                if(dtime < THRESHOLD_TIME){
+                if (dtime < THRESHOLD_TIME) {
                     int first_position = ScrollingActivity.getInstance().getFirstVisiblePosition();
                     int last_position = ScrollingActivity.getInstance().getLastVisiblePosition();
                     int count = ScrollingActivity.getInstance().getPositionsCount();
 
-                    if(first_position == 0 && vector.y > THRESHOLD_VECTOR){
+                    if (first_position == 0 && vector.y > THRESHOLD_VECTOR) {
                         loadNew();
-                    } else if(last_position == count - 1 && vector.y < -THRESHOLD_VECTOR){
+                    } else if (last_position == count - 1 && vector.y < -THRESHOLD_VECTOR) {
                         loadOld();
                     }
                 }
@@ -55,16 +55,16 @@ public class TouchListener implements OnTouchListener {
         return false;
     }
 
-    private void loadNew(){
-        if(PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE){
+    private void loadNew() {
+        if (PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE) {
             NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
         } else {
             NetworkLoader.getInstance().loadReplies(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
         }
     }
 
-    private void loadOld(){
-        if(PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE){
+    private void loadOld() {
+        if (PageController.getInstance().getCurrentPageType() == PageController.PageType.USER_PAGE) {
             NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_OLD);
         } else {
             NetworkLoader.getInstance().loadReplies(null, NetworkLoader.TweetsLoadType.UPDATE_OLD);

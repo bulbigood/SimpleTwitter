@@ -1,14 +1,22 @@
 package com.example.myapplication.ui;
 
 import android.app.Activity;
-import android.graphics.*;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.ColorFilter;
+import android.graphics.Point;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.*;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.NetworkLoader;
@@ -16,6 +24,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.Utils;
 import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;
+import com.example.myapplication.notificator.BootReceiver;
+import com.example.myapplication.notificator.NotificationHandler;
 import com.example.myapplication.page.Page;
 import com.example.myapplication.page.PageController;
 import com.example.myapplication.page.TweetPage;
@@ -25,7 +35,7 @@ import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollingActivity extends AppCompatActivity implements NestedScrollView.OnScrollChangeListener{
+public class ScrollingActivity extends AppCompatActivity implements NestedScrollView.OnScrollChangeListener {
 
     private static boolean initialized = false;
     private static ScrollingActivity activity = null;
@@ -39,13 +49,14 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     private int lastVisiblePosition = 0;
     private int positionsCount = 0;
 
-    public static ScrollingActivity getInstance(){
+    public static ScrollingActivity getInstance() {
         return activity;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_layout);
         initializeProgressBars();
 
@@ -53,9 +64,10 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         screen_size = new Point();
         display.getSize(screen_size);
 
-        if(!initialized) {
+        if (!initialized) {
             NetworkLoader.getInstance().loadBearerToken();
             PageController.getInstance();
+            NotificationHandler.getInstance(this);
         } else {
             reloadInterface();
         }
@@ -63,10 +75,36 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         initialized = true;
     }
 
-    public void reloadInterface(){
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ComponentName receiver = new ComponentName(this, BootReceiver.class);
+        PackageManager pm = getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ComponentName receiver = new ComponentName(this, BootReceiver.class);
+        PackageManager pm = getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        PageController.getInstance().comeBackHome();
+        NetworkLoader.getInstance().loadTweets(null, NetworkLoader.TweetsLoadType.UPDATE_NEW);
+    }
+
+    public void reloadInterface() {
         Page page = PageController.getInstance().getCurrentPage();
 
-        if(page instanceof UserPage) {
+        if (page instanceof UserPage) {
             setPageHeader(page.getUser());
             showUserPage();
         } else {
@@ -78,13 +116,13 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
     @Override
     public void onBackPressed() {
         PageController controller = PageController.getInstance();
-        if(controller.getPagesCount() <= 1)
+        if (controller.getPagesCount() <= 1)
             super.onBackPressed();
         else
             controller.popPage();
     }
 
-    public Point getScreenSize(){
+    public Point getScreenSize() {
         return screen_size;
     }
 
@@ -100,14 +138,14 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         return positionsCount;
     }
 
-    public void showUserPage(){
+    public void showUserPage() {
         NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
         scrollView.setOnTouchListener(TouchListener.getInstance());
         scrollView.getHitRect(scrollBounds);
         scrollView.setOnScrollChangeListener(this);
 
         Page page = PageController.getInstance().getCurrentPage();
-        List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
+        List<Tweet> tweet_list = page == null ? new ArrayList() : page.getTweets();
         adapter = new TweetsListAdapter(R.layout.tweet_layout, tweet_list);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -120,7 +158,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         layout.addView(listView);
     }
 
-    public void showTweetPage(Tweet tweet){
+    public void showTweetPage(Tweet tweet) {
         //Отключаю слушатель нажатий
         NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
         scrollView.setOnTouchListener(TouchListener.getInstance());
@@ -144,7 +182,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         Utils.loadImages(big_tweet, tweet);
 
         Page page = PageController.getInstance().getCurrentPage();
-        List<Tweet> tweet_list = page == null? new ArrayList() : page.getTweets();
+        List<Tweet> tweet_list = page == null ? new ArrayList() : page.getTweets();
         adapter = new RepliesListAdapter(R.layout.tweet_icon_layout, tweet_list);
 
         listView = (ExpandableHeightListView) inflater.inflate(R.layout.custom_list_view, null);
@@ -157,11 +195,11 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         layout.addView(listView);
     }
 
-    public ArrayAdapter getAdapter(){
+    public ArrayAdapter getAdapter() {
         return adapter;
     }
 
-    public void setPageHeader(User user){
+    public void setPageHeader(User user) {
         final User final_user = user;
         CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
 
@@ -203,7 +241,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         Glide.with(this).load(icon_url).into(icon);
     }
 
-    public void initializeProgressBars(){
+    public void initializeProgressBars() {
         ProgressBar spinnerTop = findViewById(R.id.progressBarTop);
         ProgressBar spinnerBottom = findViewById(R.id.progressBarBottom);
         int colorPrimary = ContextCompat.getColor(this, R.color.colorPrimaryDark);
@@ -218,7 +256,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
         positionsCount = listView.getChildCount();
 
         int i = 0;
-        for ( ; i < positionsCount; i++) {
+        for (; i < positionsCount; i++) {
             View childView = listView.getChildAt(i);
             if (childView.getLocalVisibleRect(scrollBounds)) {
                 firstVisiblePosition = i;
@@ -226,7 +264,7 @@ public class ScrollingActivity extends AppCompatActivity implements NestedScroll
             }
         }
 
-        for ( ; i < positionsCount; i++) {
+        for (; i < positionsCount; i++) {
             View childView = listView.getChildAt(i);
             if (childView.getLocalVisibleRect(scrollBounds)) {
                 lastVisiblePosition = i;

@@ -9,7 +9,7 @@ public class ReplyButtonListener implements View.OnClickListener {
     private PageController controller;
     private Tweet tweet;
 
-    public ReplyButtonListener(PageController controller, Tweet tweet){
+    public ReplyButtonListener(PageController controller, Tweet tweet) {
         this.controller = controller;
         this.tweet = tweet;
     }

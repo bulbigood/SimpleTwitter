@@ -62,6 +62,7 @@ public class Media {
     public String getDisplayUrl() {
         return displayUrl;
     }
+
     public String getExpandedUrl() {
         return expandedUrl;
     }

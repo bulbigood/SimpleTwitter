@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TweetPage implements Page{
+public class TweetPage implements Page {
 
     private LinkedList<Tweet> replies = new LinkedList();
     private Tweet tweet;
@@ -15,7 +15,7 @@ public class TweetPage implements Page{
     private long oldestID = -1;
     private long newestID = -1;
 
-    TweetPage(Tweet tw){
+    TweetPage(Tweet tw) {
         tweet = tw;
     }
 
@@ -30,7 +30,7 @@ public class TweetPage implements Page{
     }
 
     @Override
-    public List<Tweet> getTweets(){
+    public List<Tweet> getTweets() {
         return new ArrayList(replies);
     }
 
@@ -63,11 +63,11 @@ public class TweetPage implements Page{
         refreshIDs();
     }
 
-    public Tweet getHeaderTweet(){
+    public Tweet getHeaderTweet() {
         return tweet;
     }
 
-    private void refreshIDs(){
+    private void refreshIDs() {
         newestID = replies.get(0).getId();
         oldestID = replies.get(replies.size() - 1).getId();
     }

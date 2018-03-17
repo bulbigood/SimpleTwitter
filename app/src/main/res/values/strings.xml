@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">TweetApp</string>
     <string name="app_toolbar_title">Президент России</string>
+    <string name="temp_file">com.example.myapplication.TEMP_FILE_KEY</string>
+
+    <integer name="last_id_default">0</integer>
+    <string name="last_id">0</string>
 </resources>

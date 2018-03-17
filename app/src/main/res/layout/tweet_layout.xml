@@ -90,13 +90,6 @@
                     android:background="@color/white"
                     android:layout_marginRight="@dimen/little_margin" android:layout_marginEnd="@dimen/little_margin"
                     app:srcCompat="@drawable/reply" android:id="@+id/replyButton"/>
-            <TextView
-                    style="@style/TweetSecondaryText"
-                    android:textStyle="bold"
-                    android:text=""
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tweet_reply_count"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"

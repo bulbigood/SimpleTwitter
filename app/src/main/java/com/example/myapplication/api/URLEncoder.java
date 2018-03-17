@@ -2,30 +2,29 @@ package com.example.myapplication.api;
 
 
 /**
- *
  * LibFormula : a free Java formula library
- *
- *
+ * <p>
+ * <p>
  * Project Info:  http://reporting.pentaho.org/libformula/
- *
+ * <p>
  * (C) Copyright 2006-2007, by Pentaho Corporation and Contributors.
- *
+ * <p>
  * This library is free software; you can redistribute it and/or modify it under the terms
  * of the GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 2.1 of the License, or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License along with this
  * library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307, USA.
- *
+ * <p>
  * [Java is a trademark or registered trademark of Sun Microsystems, Inc.
  * in the United States and other countries.]
- *
- *
+ * <p>
+ * <p>
  * ------------
  * $Id: URLEncoder.java 3521 2007-10-16 10:55:14Z tmorgner $
  * ------------
@@ -42,10 +41,8 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Thomas Morgner
  */
-public class URLEncoder
-{
-    private URLEncoder()
-    {
+public class URLEncoder {
+    private URLEncoder() {
     }
 
     private static final String[] hex = {
@@ -105,45 +102,30 @@ public class URLEncoder
      * @param s The string to be encoded
      * @return The encoded string
      */
-    public static String encodeUTF8 (final String s)
-    {
+    public static String encodeUTF8(final String s) {
         final StringBuffer sbuf = new StringBuffer();
         final char[] sChars = s.toCharArray();
         final int len = sChars.length;
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             final int ch = sChars[i];
-            if ('A' <= ch && ch <= 'Z')
-            {   // 'A'..'Z'
+            if ('A' <= ch && ch <= 'Z') {   // 'A'..'Z'
                 sbuf.append((char) ch);
-            }
-            else if ('a' <= ch && ch <= 'z')
-            { // 'a'..'z'
+            } else if ('a' <= ch && ch <= 'z') { // 'a'..'z'
                 sbuf.append((char) ch);
-            }
-            else if ('0' <= ch && ch <= '9')
-            { // '0'..'9'
+            } else if ('0' <= ch && ch <= '9') { // '0'..'9'
                 sbuf.append((char) ch);
-            }
-            else if (ch == '-' || ch == '_'   // unreserved
+            } else if (ch == '-' || ch == '_'   // unreserved
                     || ch == '.' || ch == '!'
                     || ch == '~' || ch == '*'
                     || ch == '\'' || ch == '('
-                    || ch == ')')
-            {
+                    || ch == ')') {
                 sbuf.append((char) ch);
-            }
-            else if (ch <= 0x007f)
-            {   // other ASCII
+            } else if (ch <= 0x007f) {   // other ASCII
                 sbuf.append(hex[ch]);
-            }
-            else if (ch <= 0x07FF)
-            {   // non-ASCII <= 0x7FF
+            } else if (ch <= 0x07FF) {   // non-ASCII <= 0x7FF
                 sbuf.append(hex[0xc0 | (ch >> 6)]);
                 sbuf.append(hex[0x80 | (ch & 0x3F)]);
-            }
-            else
-            {         // 0x7FF < ch <= 0xFFFF
+            } else {         // 0x7FF < ch <= 0xFFFF
                 sbuf.append(hex[0xe0 | (ch >> 12)]);
                 sbuf.append(hex[0x80 | ((ch >> 6) & 0x3F)]);
                 sbuf.append(hex[0x80 | (ch & 0x3F)]);
@@ -152,53 +134,40 @@ public class URLEncoder
         return sbuf.toString();
     }
 
-    private static String encodeBytes (final byte[] s)
-    {
+    private static String encodeBytes(final byte[] s) {
         final StringBuffer sbuf = new StringBuffer();
         final int len = s.length;
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             final int ch = (s[i] & 0xff);
-            if ('A' <= ch && ch <= 'Z')
-            {   // 'A'..'Z'
+            if ('A' <= ch && ch <= 'Z') {   // 'A'..'Z'
                 sbuf.append((char) ch);
-            }
-            else if ('a' <= ch && ch <= 'z')
-            { // 'a'..'z'
+            } else if ('a' <= ch && ch <= 'z') { // 'a'..'z'
                 sbuf.append((char) ch);
-            }
-            else if ('0' <= ch && ch <= '9')
-            { // '0'..'9'
+            } else if ('0' <= ch && ch <= '9') { // '0'..'9'
                 sbuf.append((char) ch);
-            }
-            else if (ch == '-' || ch == '_'   // unreserved
+            } else if (ch == '-' || ch == '_'   // unreserved
                     || ch == '.' || ch == '!'
                     || ch == '~' || ch == '*'
                     || ch == '\'' || ch == '('
-                    || ch == ')')
-            {
+                    || ch == ')') {
                 sbuf.append((char) ch);
-            }
-            else
-            {   // other ASCII
+            } else {   // other ASCII
                 sbuf.append(hex[ch]);
             }
         }
         return sbuf.toString();
     }
 
-    public static String encode (final String s, final String encoding)
-            throws UnsupportedEncodingException
-    {
-        if ("utf-8".equalsIgnoreCase(encoding))
-        {
+    public static String encode(final String s, final String encoding)
+            throws UnsupportedEncodingException {
+        if ("utf-8".equalsIgnoreCase(encoding)) {
             return encodeUTF8(s);
         }
 
         return encodeBytes(s.getBytes(encoding));
     }
 
-    public static String getBearerTokenCredentials(String key, String secret){
+    public static String getBearerTokenCredentials(String key, String secret) {
         String rfc_key = encodeUTF8(key);
         String rfc_secret = encodeUTF8(secret);
         String token = rfc_key + ":" + rfc_secret;

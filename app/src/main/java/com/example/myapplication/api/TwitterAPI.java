@@ -1,18 +1,18 @@
 package com.example.myapplication.api;
 
-import java.util.List;
-
 import com.example.myapplication.api.structure.SearchResult;
 import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import java.util.List;
+
 public interface TwitterAPI {
 
     @GET("/1.1/statuses/show.json")
     Call<Tweet> getTweet(@Query("id") Long id, @Query("tweet_mode") String tweet_mode,
-                                @Header("Authorization") String credentials);
+                         @Header("Authorization") String credentials);
 
     @GET("/1.1/search/tweets.json")
     Call<SearchResult> searchTweets(@Query("q") String q, @Query("count") Integer count,

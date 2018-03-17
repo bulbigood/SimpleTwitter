@@ -181,7 +181,9 @@ public class Tweet implements Comparable<Tweet> {
         return lang;
     }
 
-    public Entities getEntities() { return entities; }
+    public Entities getEntities() {
+        return entities;
+    }
 
     @Override
     public int compareTo(Tweet o) {
