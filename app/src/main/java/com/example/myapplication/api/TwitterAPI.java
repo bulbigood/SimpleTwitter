@@ -1,5 +1,6 @@
 package com.example.myapplication.api;
 
+import com.example.myapplication.api.structure.BearerToken;
 import com.example.myapplication.api.structure.SearchResult;
 import com.example.myapplication.api.structure.Tweet;
 import com.example.myapplication.api.structure.User;

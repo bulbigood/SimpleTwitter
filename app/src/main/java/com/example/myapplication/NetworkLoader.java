@@ -2,8 +2,7 @@ package com.example.myapplication;
 
 import android.util.Log;
 import android.view.View;
-import com.example.myapplication.api.AppInitializer;
-import com.example.myapplication.api.BearerToken;
+import com.example.myapplication.api.structure.BearerToken;
 import com.example.myapplication.api.URLEncoder;
 import com.example.myapplication.api.structure.SearchResult;
 import com.example.myapplication.api.structure.Status;
